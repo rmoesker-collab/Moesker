@@ -1,0 +1,36 @@
+[project]
+name = "stahltrace"
+version = "0.1.0"
+description = "Agent-driven workflows backed by Postgres + pgvector."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "claude-agent-sdk>=0.1.0",
+    "psycopg[binary,pool]>=3.2",
+    "pgvector>=0.3",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "typer>=0.12",
+    "rich>=13.7",
+    "anyio>=4.4",
+]
+
+[project.scripts]
+stahltrace = "stahltrace.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.2",
+    "ruff>=0.6",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/stahltrace"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
