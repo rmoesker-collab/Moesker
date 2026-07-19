@@ -34,6 +34,30 @@ def ask(
 
 
 @app.command()
+def serve(
+    host: str = typer.Option("0.0.0.0", "--host", help="Interface to bind."),
+    port: int = typer.Option(8080, "--port", help="Port to listen on."),
+) -> None:
+    """Run the HTTP API (used by the Fly.io deployment)."""
+    import uvicorn
+
+    uvicorn.run("stahltrace.server:app", host=host, port=port)
+
+
+@app.command(name="db-migrate")
+def db_migrate() -> None:
+    """Apply pending SQL migrations from the migrations/ directory."""
+    from .db import apply_migrations
+
+    applied = apply_migrations()
+    if applied:
+        for name in applied:
+            console.print(f"applied {name}")
+    else:
+        console.print("no pending migrations")
+
+
+@app.command()
 def db_check() -> None:
     """Verify database connectivity and that pgvector is installed."""
     from .db import get_conn
