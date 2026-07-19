@@ -1,7 +1,9 @@
 # Fly.io app configuration for StahlTrace.
 # Docs: https://fly.io/docs/reference/configuration/
 
-app = "stahltrace"
+# Deploys target the existing Fly app. If your app is named differently,
+# check with `fly apps list` and update this line to match exactly.
+app = "stahltrace-brain"
 # Pick the region closest to you: `fly platform regions`
 primary_region = "ams"
 

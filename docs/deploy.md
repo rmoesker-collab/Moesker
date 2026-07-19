@@ -13,20 +13,26 @@ Install [flyctl](https://fly.io/docs/flyctl/install/) and sign in:
 fly auth login
 ```
 
-Create the app (uses the existing `fly.toml`; pick your own app name if
-`stahltrace` is taken, and update `app = ...` in `fly.toml` to match):
+`fly.toml` targets the **existing** Fly app `stahltrace-brain`. Confirm the
+name matches your app exactly:
 
 ```bash
-fly launch --no-deploy --copy-config
+fly apps list
 ```
+
+If it differs (even by a hyphen), edit the `app = "stahltrace-brain"` line in
+`fly.toml` to match — deploys go to whatever app that line names. If the app
+doesn't exist yet, create it with `fly launch --no-deploy --copy-config`.
 
 ### Postgres with pgvector
 
-Create a Fly Managed Postgres cluster and attach it:
+Skip this if the app already has a database attached (check with
+`fly secrets list --app stahltrace-brain` — look for `DATABASE_URL`).
+Otherwise, create a Fly Managed Postgres cluster and attach it:
 
 ```bash
 fly mpg create --name stahltrace-db --region ams
-fly mpg attach stahltrace-db --app stahltrace
+fly mpg attach stahltrace-db --app stahltrace-brain
 ```
 
 `attach` sets `DATABASE_URL` on the app automatically. Fly Managed Postgres
@@ -41,15 +47,15 @@ work is needed.
 ### Secrets
 
 ```bash
-fly secrets set ANTHROPIC_API_KEY=sk-ant-...
+fly secrets set ANTHROPIC_API_KEY=sk-ant-... --app stahltrace-brain
 ```
 
 ### First deploy (manual, to verify everything works)
 
 ```bash
 fly deploy
-curl https://stahltrace.fly.dev/health
-curl https://stahltrace.fly.dev/health/db
+curl https://stahltrace-brain.fly.dev/health
+curl https://stahltrace-brain.fly.dev/health/db
 ```
 
 ## 2. One-time GitHub setup
@@ -58,7 +64,7 @@ Create a deploy token and add it to the repository so GitHub Actions can
 deploy:
 
 ```bash
-fly tokens create deploy --app stahltrace
+fly tokens create deploy --app stahltrace-brain
 ```
 
 Copy the output (including the `FlyV1 ` prefix) into the repository under
@@ -89,7 +95,7 @@ same agent used by the CLI:
 Example:
 
 ```bash
-curl -X POST https://stahltrace.fly.dev/ask \
+curl -X POST https://stahltrace-brain.fly.dev/ask \
   -H "Content-Type: application/json" \
   -d '{"prompt": "Summarize what StahlTrace is."}'
 ```
