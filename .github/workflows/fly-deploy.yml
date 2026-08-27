@@ -1,0 +1,25 @@
+name: Fly Deploy
+
+on:
+  push:
+    branches:
+      # The repository's current default branch, plus `main` in case it is
+      # renamed later. Deploys run only on pushes to the default branch.
+      - claude/init-stahltrace-project-jwkXx
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Fly.io
+    runs-on: ubuntu-latest
+    concurrency: fly-deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy
+        run: flyctl deploy --remote-only
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}

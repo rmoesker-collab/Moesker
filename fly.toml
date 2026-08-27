@@ -1,0 +1,36 @@
+# Fly.io app configuration for StahlTrace.
+# Docs: https://fly.io/docs/reference/configuration/
+
+# Deploys target the existing Fly app. If your app is named differently,
+# check with `fly apps list` and update this line to match exactly.
+app = "stahltrace-brain"
+# Pick the region closest to you: `fly platform regions`
+primary_region = "ams"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[deploy]
+  # Applies migrations/*.sql before each new release goes live.
+  release_command = "stahltrace db-migrate"
+
+[env]
+  STAHLTRACE_MODEL = "claude-sonnet-4-6"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
