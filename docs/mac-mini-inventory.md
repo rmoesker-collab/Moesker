@@ -18,14 +18,32 @@ sessions with no repository attached.
 | `session_01TPFAnM9AzNjsJUmBH8Gsuw` | Claude code installation | `claude/hopeful-darwin-8bjfi2` | never pushed — no commits exist |
 | `session_01EM21nXx4TusWvdjrXZyHYR` | Fly dev, GitHub, and Stacktrace integration | `claude/fly-github-stacktrace-integration-tnpu87` | **2 commits, pushed, unmerged — imported by this branch** |
 | `session_01LxqHrTSrbi2LJSUhXt7WJH` | Display discrepancy between devices | `claude/display-discrepancy-mac-mini-sk84kn` | never pushed — blocked awaiting a push from the Mac mini |
-| `session_01Sk4qRVF9vfFwv5nPWQhwau` | Claude RC | `claude/claude-rc-yvc3zd` | never pushed — blocked on an unanswered question |
+| `session_01Sk4qRVF9vfFwv5nPWQhwau` | Claude RC | `claude/claude-rc-yvc3zd` | **unblocked and pushed** — now PR #3 (Claude Code project config) |
 | `session_01Sd8kbMSchASkG8SF2WQRCn` | Dispatch background conversation | — | Cowork bridge, no repo |
 | `session_01NKN5qi1g8XzZ6hn65nZY2t` | Dispatch background conversation | — | Cowork bridge, no repo |
 
-Only three branches exist on `rmoesker-collab/Moesker`: the default branch, the
-Fly/CI branch, and this import branch. The other session branches were never
-pushed, so **no work is recoverable from them** — those sessions ended before
-committing anything.
+Four branches now exist on `rmoesker-collab/Moesker`: the default branch, the
+Fly/CI branch, this import branch, and `claude/claude-rc-yvc3zd` (added
+2026-08-27T15:08Z, after this inventory was first written). The remaining
+session branches were never pushed, so **no work is recoverable from them** —
+those sessions ended before committing anything.
+
+### Open pull requests
+
+| PR | Branch | Contents |
+| --- | --- | --- |
+| #1 | `claude/fly-github-stacktrace-integration-tnpu87` | Fly.io deploy + CI — draft since 2026-07-19, superseded by this branch |
+| #2 | `claude/mac-mini-import-79o0bb` | this branch — the Fly/CI import plus this inventory |
+| #3 | `claude/claude-rc-yvc3zd` | `CLAUDE.md`, `.claude/settings.json`, SessionStart hook |
+
+**Merge-order conflict between #2 and #3.** `CLAUDE.md` in #3 states that
+`tests/` does not exist and that `uv run pytest` exiting 5 is the expected
+state. This branch adds `tests/test_smoke.py`, after which pytest collects two
+tests and exits 0. If #3 merges alongside or after #2, its Tests section is
+wrong in a way that will actively mislead future sessions into treating a real
+failure as normal. `CLAUDE.md` also predates `server.py`, so its Layout and
+Commands sections omit `stahltrace serve` and `stahltrace db-migrate`. Whichever
+lands second needs `CLAUDE.md` updated in the same change.
 
 ### Imported here
 
